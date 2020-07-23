@@ -24,16 +24,18 @@ const eqObjects = (firstObject, secondObject) => {
     return false;
   }
   for (let key in firstObject) {
-    if (!eqArrays(firstObject[key], secondObject[key]) && !(!(Array.isArray(firstObject[key])) && firstObject[key] === secondObject[key])) {
+    if (typeof firstObject[key] === 'object' && !(Array.isArray(firstObject[key]))) {
+      if (!eqObjects(firstObject[key], secondObject[key])) {
+        return false;
+      }
+    } else if (!eqArrays(firstObject[key], secondObject[key]) && !(!(Array.isArray(firstObject[key])) && firstObject[key] === secondObject[key])) {
       return false;
     }
   }
   return true;
 };
 
-const cd = { c: "1", d: ["2", 3] };
-const dc = { d: ["2", 3], c: "1" };
-console.log(eqObjects(cd, dc)); // => true
-
-const cd2 = { c: "1", d: ["2", 3, 4] };
-console.log(eqObjects(cd, cd2)); // => false
+console.log(eqObjects({ a: { z: 1 }, b: 2 }, { a: { z: 1 }, b: 2 })); // => true
+console.log(eqObjects({ a: { y: 0, z: 1 }, b: 2 }, { a: { z: 1 }, b: 2 })); // => false
+console.log(eqObjects({ a: { y: 0, z: 1 }, b: 2 }, { a: 1, b: 2 })); // => false
+console.log(eqObjects({ a: { z: { d: { o: 1}} }, b: 2 }, { a: { z: { d: { o: 1}} }, b: 2 })); // => true
