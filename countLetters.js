@@ -18,3 +18,5 @@ const countLetters = (sentence) => {
   }
   return results;
 };
+
+module.exports = countLetters;
